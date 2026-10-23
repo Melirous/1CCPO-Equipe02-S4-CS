@@ -70,10 +70,3 @@ docs/evidencias/               saídas reais dos testes (v1 com 2 falhas, v2 cor
 ## Limitações
 
 Simulação sem medição em carregador real; a potência de 50 kW por conector é uma premissa; o nível de bateria não é recalculado ao longo do tempo.
-
-## Integrantes
-
-- Gustavo Melo dos Santos (RM573562)
-- João Pedro Costenari Silva (RM572260)
-- João Victor Canello Ferian (RM573295)
-- Lucas Klein da Veiga (RM570029)
