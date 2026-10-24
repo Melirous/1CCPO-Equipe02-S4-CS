@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Protótipo final – Estação de recarga de veículos elétricos comerciais
 
