@@ -1,4 +1,4 @@
-"""Plano de testes – Sprint 04.  Uso:  python testes.py [--sem-desempate]
+"""Plano de testes – Sprint 04.
 A opção --sem-desempate reproduz a 1ª versão do protótipo (antes da correção dos Testes 10 e 11)."""
 
 import itertools
