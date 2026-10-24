@@ -1,0 +1,100 @@
+Protótipo: teto=100 kW, conector=50 kW, desempate=ligado
+
+[Teste 01] Funcionamento normal: login válido
+  Entradas : e-mail=admin@email.com, senha=1234
+  Esperado : Login autorizado
+  Obtido   : Login autorizado
+  Status   : OK
+
+[Teste 02] Operação impedida: senha incorreta
+  Entradas : e-mail=admin@email.com, senha=0000, veículo CAM-01 (30%)
+  Esperado : Acesso negado; nenhuma sessão criada
+  Obtido   : Acesso negado; sessões ativas = 0
+  Status   : OK
+
+[Teste 03] Funcionamento normal: 1 veículo, teto não atingido
+  Entradas : login válido; CAM-01 com 30%
+  Esperado : S=1 T=0 F=0 -> Q=1; 50 kW (nominal)
+  Obtido   : S=1 T=0 F=0 -> Q=1; 50 kW
+  Veículo   SoC   S T M F | Q | Potência
+  CAM-01     30%  1 0 1 0 | 1 |   50.0 kW
+  Total: 50.0 kW
+  Status   : OK
+
+[Teste 04] Decisão: 2 veículos, teto de 100 kW atingido sem corte
+  Entradas : login válido; CAM-01 20%, CAM-02 70%
+  Esperado : T=1, F=0 -> Q=1 para ambos; 50 kW cada (total 100 kW)
+  Obtido   : CAM-01: Q=1 50 kW; CAM-02: Q=1 50 kW
+  Veículo   SoC   S T M F | Q | Potência
+  CAM-01     20%  1 1 1 0 | 1 |   50.0 kW
+  CAM-02     70%  1 1 0 0 | 1 |   50.0 kW
+  Total: 100.0 kW
+  Status   : OK
+
+[Teste 05] Decisão: 3 veículos excedem o teto; prioridade à menor bateria
+  Entradas : login válido; CAM-01 60%, CAM-02 15%, CAM-03 40%
+  Esperado : CAM-02 (15%): Q=1, 50 kW; CAM-01 e CAM-03: Q=0, 25 kW cada; total 100 kW
+  Obtido   : CAM-01: Q=0 25 kW; CAM-02: Q=1 50 kW; CAM-03: Q=0 25 kW
+  Veículo   SoC   S T M F | Q | Potência
+  CAM-01     60%  1 1 0 1 | 0 |   25.0 kW
+  CAM-02     15%  1 1 1 1 | 1 |   50.0 kW
+  CAM-03     40%  1 1 0 1 | 0 |   25.0 kW
+  Total: 100.0 kW
+  Status   : OK
+
+[Teste 06] Exceção: nenhuma sessão ativa (S=0)
+  Entradas : nenhum veículo conectado
+  Esperado : Q=0; 0 kW entregues
+  Obtido   : sessões=0; Q(S=0)=0; total=0.0 kW
+  Status   : OK
+
+[Teste 07] Exceção: campos vazios e nível de bateria inválido
+  Entradas : (a) e-mail='' senha=''; (b) login válido com SoC=150%
+  Esperado : (a) Acesso negado; (b) rejeitado; nenhuma sessão criada
+  Obtido   : (a) Acesso negado; (b) Nível de bateria inválido (use 0 a 100%); sessões=0
+  Status   : OK
+
+[Teste 08] Lógica do login: tabela verdade completa (AND de 2 XNOR)
+  Entradas : 4 combinações de (e-mail correto, senha correta)
+  Esperado : saída = 0,0,0,1
+  Obtido   : saída = 0,0,0,1
+  Status   : OK
+
+[Teste 09] Lógica de potência: Q original == Q simplificada
+  Entradas : 16 combinações de (S,T,M,F)
+  Esperado : 0 divergências em 16
+  Obtido   : 0 divergências em 16
+  Status   : OK
+
+[Teste 10] Exceção: empate no menor nível de bateria (4 veículos)
+  Entradas : CAM-01 20%, CAM-02 20%, CAM-03 20%, CAM-04 80%
+  Esperado : total entregue <= 100 kW (apenas 1 veículo prioritário)
+  Obtido   : total = 100.0 kW; veículos com M=1: 1
+  Veículo   SoC   S T M F | Q | Potência
+  CAM-01     20%  1 1 1 1 | 1 |   50.0 kW
+  CAM-02     20%  1 1 0 1 | 0 |   16.7 kW
+  CAM-03     20%  1 1 0 1 | 0 |   16.7 kW
+  CAM-04     80%  1 1 0 1 | 0 |   16.7 kW
+  Total: 100.0 kW
+  Status   : OK
+
+[Teste 11] Segurança: teto de 100 kW nunca é ultrapassado
+  Entradas : 0 a 6 veículos, SoC em {10, 50, 90}% (todas as combinações)
+  Esperado : 0 violações do teto
+  Obtido   : 0 violações em 1093 cenários
+  Status   : OK
+
+==================================================
+RESUMO
+  Teste 01: OK
+  Teste 02: OK
+  Teste 03: OK
+  Teste 04: OK
+  Teste 05: OK
+  Teste 06: OK
+  Teste 07: OK
+  Teste 08: OK
+  Teste 09: OK
+  Teste 10: OK
+  Teste 11: OK
+Total: 11/11 OK
