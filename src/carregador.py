@@ -23,9 +23,7 @@ EMAIL_CORRETO = "admin@email.com"
 SENHA_CORRETA = "1234"
 
 
-# ----------------------------------------------------------------------------
 # 1) AUTENTICAÇÃO  (Sprints 01 e 02)
-# ----------------------------------------------------------------------------
 def xnor(a: bool, b: bool) -> bool:
     """Porta XNOR: 1 somente quando as duas entradas são iguais."""
     return a == b
