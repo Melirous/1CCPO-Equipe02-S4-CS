@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Protótipo final – Estação de recarga de veículos elétricos comerciais (Sprint 04)
+Protótipo final – Estação de recarga de veículos elétricos comerciais
 
 Integra a lógica validada nas sprints anteriores:
   * Sprints 01-02: autenticação  Login = (Email ⊙ EmailCorreto) · (Senha ⊙ SenhaCorreta)
@@ -10,7 +10,7 @@ Entradas  : e-mail, senha, nível de bateria (SoC) de cada veículo conectado
 Decisões  : porta AND/XNOR do login + função booleana Q por sessão
 Saídas    : "Login autorizado"/"Acesso negado" + potência (kW) entregue a cada veículo
 
-Premissas do protótipo (a equipe pode ajustar as constantes abaixo):
+Premissas do protótipo:
   * teto de potência contratada da estação ........ 100 kW  (Sprint 03)
   * potência máxima / nominal de cada conector .... 50 kW   (premissa)
   * prioridade: veículo com MENOR nível de bateria recebe a potência nominal;
@@ -20,7 +20,7 @@ Premissas do protótipo (a equipe pode ajustar as constantes abaixo):
 CAP_KW = 100.0        # teto de potência contratada
 CONECTOR_KW = 50.0    # potência máxima/nominal de um conector
 
-EMAIL_CORRETO = "admin@email.com"   # credenciais da Sprint 02 (Python)
+EMAIL_CORRETO = "admin@email.com"
 SENHA_CORRETA = "1234"
 
 
@@ -41,10 +41,8 @@ def autenticar(email_digitado: str, senha_digitada: str) -> bool:
     return email_ok and senha_ok
 
 
-# ----------------------------------------------------------------------------
 # 2) DECISÃO DE POTÊNCIA  (Sprint 03)
-# ----------------------------------------------------------------------------
-MINTERMOS_Q = {8, 9, 10, 11, 12, 14, 15}   # expressão original (soma de produtos canônica)
+MINTERMOS_Q = {8, 9, 10, 11, 12, 14, 15}   # expressão original
 
 
 def q_original(S: int, T: int, M: int, F: int) -> int:
@@ -57,9 +55,7 @@ def q_simplificada(S: int, T: int, M: int, F: int) -> int:
     return int(bool(S and ((not T) or M or (not F))))
 
 
-# ----------------------------------------------------------------------------
 # 3) ALOCAÇÃO DE POTÊNCIA DA ESTAÇÃO
-# ----------------------------------------------------------------------------
 def alocar(sessoes, desempate=True):
     """Calcula S, T, M, F, Q e a potência (kW) de cada sessão.
 
@@ -96,9 +92,7 @@ def total_kw(resultado) -> float:
     return sum(r["kw"] for r in resultado)
 
 
-# ----------------------------------------------------------------------------
 # 4) ESTAÇÃO (fluxo integrado: login -> sessão -> alocação)
-# ----------------------------------------------------------------------------
 class Estacao:
     def __init__(self, desempate=True):
         self.sessoes = []            # [(id, soc)] em ordem de chegada
@@ -130,9 +124,7 @@ def imprimir_estado(resultado):
     print(f"  Total entregue: {total_kw(resultado):.1f} kW (teto {CAP_KW:.0f} kW)")
 
 
-# ----------------------------------------------------------------------------
 # 5) MODO INTERATIVO
-# ----------------------------------------------------------------------------
 def main():
     est = Estacao()
     print("=== Estação de recarga – protótipo Sprint 04 ===")
